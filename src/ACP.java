@@ -1,42 +1,39 @@
+import java.util.List;
 import java.util.Stack;
 
 public class ACP {
     public Stack<Character> pilha;
 
     public Estado estadoInicial;
-    public Estado estados[];
-    public char alfabeto[];
-    public char alfabetoAutomato[];
-    public Estado estadosAceitacao[];
-    public Estado estadosAtuais[];
+    public List<Estado> estados;
+    public List<Character> alfabetoAutomato;
+    public List<Character> alfabetoPilha;
+    public List<Estado> estadosAtuais;
     public char simboloInicio;
 
-    public ACP(
-        Estado estadoInicial, Estado estados[],
-        char alfabeto[], char alfabetoAutomato[],
-        Estado estadosAceitacao[], char simboloInicio,
-        Estado estadosAtuais[]
+    public ACP (
+        Estado estadoInicial, List<Estado> estados,
+        List<Character> alfabetoAutomato, List<Character> alfabetoPilha,
+        char simboloInicio
     ) {
         this.estadoInicial = estadoInicial;
         this.estados = estados;
-        this.alfabeto = alfabeto;
         this.alfabetoAutomato = alfabetoAutomato;
-        this.estadosAceitacao = estadosAceitacao;
+        this.alfabetoPilha = alfabetoPilha;
         this.simboloInicio = simboloInicio;
-        this.estadosAtuais = estadosAtuais;
 
         pilha = new Stack<Character>();
         pilha.push(simboloInicio);
     }
 
     public void avaliarEntrada(char entrada){
-        for(int i = 0; i<estadosAtuais.length; i++){
-            proximosEstados= funcao(estadosAtuais[i],entrada);
+        for(Estado estadoAtual : estadosAtuais){
+            List<Estado> proximosEstados = estadoAtual.obterEstadosTransicao(entrada);
 
-           if(proximosEstados.length > 0){
-               estadosAtuais.remove(estadosAtuais[i]);
-               estadorAtuais.add(estadosAtuais[i].proximosEstados);
-           }else{
+           if(proximosEstados.size() > 0){
+               estadosAtuais.remove(estadoAtual);
+               estadosAtuais.addAll(proximosEstados);
+           } else {
                System.out.println("entrada invalida");
            }
         }
@@ -47,7 +44,7 @@ public class ACP {
     }
 
     public boolean eValido(char entrada){
-        for(char letra: alfabeto){
+        for(char letra : alfabetoAutomato){
             if(letra == entrada){
                 return true;
             }
