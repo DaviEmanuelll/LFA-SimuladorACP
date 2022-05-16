@@ -122,7 +122,7 @@ public class CriarACP {
                 char topoPilha = ' ';
                 Estado proximoEstado;
                 char proximoSimbolo = ' ';
-                System.out.println("-"+i+"º Função de Transição");
+                System.out.println("-" + (i+1) + "º Função de Transição");
 
                 boolean entradaValida = false;
                 while(entradaValida == false){

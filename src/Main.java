@@ -5,7 +5,6 @@ public class Main{
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String args[]) {
-
         ACP acpPadrao = null;
         
         System.out.print("Deseja usar o APC de exemplo ou criar um ACP (0 - exemplo | 1 - criar)? ");
@@ -17,7 +16,7 @@ public class Main{
             CriarACP.definirFuncoesTransicao(estados, acpPadrao);
         } else {
             acpPadrao = CriarACP.chamarACP();
-            System.out.println("O ACP usado será: "+acpPadrao.nome);
+            System.out.println("O ACP usado será: " + acpPadrao.nome);
         }
 
         boolean avaliarOutraEntrada = true;
@@ -34,7 +33,7 @@ public class Main{
                 acp.validarEntradaCompleta(entrada);
 
                 for(int ind=0 ; ind<entrada.length() || acp.existeTransicaoVazia() ; ind++) {
-                    char letter = ind == entrada.length() ? '-' : entrada.charAt(ind);
+                    char letter = ind >= entrada.length() ? '-' : entrada.charAt(ind);
                     acp.atualizarACP(letter);
                 }
 

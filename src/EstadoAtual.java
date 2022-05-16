@@ -21,20 +21,23 @@ public class EstadoAtual {
     public List<EstadoAtual> obterEstadosTransicao(char entrada) {
         List<EstadoAtual> proximosEstados = new ArrayList<EstadoAtual>();
 
-        for(FuncaoTransicao funcaoTransicao : estado.funcoesTransicao) {
-            boolean entradaEquivalente = 
-                funcaoTransicao.entrada == '-' || funcaoTransicao.entrada == entrada;
-            boolean topoEquivalente =
-                pilhaMomentanea.size() != 0 && funcaoTransicao.topoPilha == pilhaMomentanea.peek();
-
-            if(entradaEquivalente && topoEquivalente) {
-                Stack<Character> pilhaAtualizada = new Stack<Character>();
-                pilhaAtualizada.addAll(pilhaMomentanea);
-                tratarAdicaoPilha(pilhaAtualizada, funcaoTransicao.proximoSimbolo);
-
-                proximosEstados.add(
-                    new EstadoAtual(funcaoTransicao.proximoEstado, pilhaAtualizada)
-                );
+        if(entrada == '-' && estado.funcoesTransicao.size() == 0) proximosEstados.add(this);
+        else {
+            for(FuncaoTransicao funcaoTransicao : estado.funcoesTransicao) {
+                boolean entradaEquivalente = 
+                    funcaoTransicao.entrada == '-' || funcaoTransicao.entrada == entrada;
+                boolean topoEquivalente =
+                    pilhaMomentanea.size() != 0 && funcaoTransicao.topoPilha == pilhaMomentanea.peek();
+    
+                if(entradaEquivalente && topoEquivalente) {
+                    Stack<Character> pilhaAtualizada = new Stack<Character>();
+                    pilhaAtualizada.addAll(pilhaMomentanea);
+                    tratarAdicaoPilha(pilhaAtualizada, funcaoTransicao.proximoSimbolo);
+    
+                    proximosEstados.add(
+                        new EstadoAtual(funcaoTransicao.proximoEstado, pilhaAtualizada)
+                    );
+                }
             }
         }
 
@@ -43,8 +46,10 @@ public class EstadoAtual {
 
     public void exibirPilha() {
         if(pilhaMomentanea.size() == 0) return;
+        Character ultimoElemento = pilhaMomentanea.get(
+            pilhaMomentanea.size()-1
+        );
 
-        Character ultimoElemento = pilhaMomentanea.get(0);
         for(Character elementoPilha : pilhaMomentanea) {
             System.out.print(elementoPilha);
             if(elementoPilha != ultimoElemento) System.out.print(" ");
