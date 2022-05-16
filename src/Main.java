@@ -1,50 +1,54 @@
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Main{
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String args[]) {
-
         List<Estado> estados = CriarACP.criarEstados();
-        ACP acp = CriarACP.criarACP(estados);
-        CriarACP.definirFuncoesTransicao(estados, acp);
+        ACP acpPadrao = CriarACP.criarACP(estados);
+        CriarACP.definirFuncoesTransicao(estados, acpPadrao);
 
-        System.out.println("Informe a entrada: ");
-        String entrada = scanner.nextLine();
+        boolean avaliarOutraEntrada = true;
+        while(avaliarOutraEntrada) {
+            System.out.print("Informe a entrada: ");
+            String entrada = scanner.next();
 
-        try {
-            acp.validarEntradaCompleta(entrada);
+            ACP acp = new ACP(
+                acpPadrao.estadoInicial, acpPadrao.alfabetoAutomato, 
+                acpPadrao.alfabetoPilha, acpPadrao.simboloInicio
+            );
 
-            for(int ind=0 ; ind<entrada.length() ; ind++) {
-                char letter = entrada.charAt(ind);
-                acp.atualizarACP(letter);
-            }
+            try {
+                acp.validarEntradaCompleta(entrada);
 
-            boolean automatoAceito = false;
-            String mensagemFinal = "A entrada";
-            for(EstadoAtual estadoAtual : acp.estadosAtuais) {
-                boolean ramificacaoMorta = estadoAtual == null || estadoAtual.estado == null;
-                if(!ramificacaoMorta && estadoAtual.estado.aceitacao) {
-                    automatoAceito = true;
+                for(int ind=0 ; ind<entrada.length() || acp.existeTransicaoVazia() ; ind++) {
+                    char letter = ind == entrada.length() ? '-' : entrada.charAt(ind);
+                    acp.atualizarACP(letter);
                 }
+
+                boolean automatoAceito = false;
+                String mensagemFinal = "A entrada";
+                for(EstadoAtual estadoAtual : acp.estadosAtuais) {
+                    boolean ramificacaoMorta = estadoAtual == null || estadoAtual.estado == null;
+                    if(!ramificacaoMorta && estadoAtual.estado.aceitacao) {
+                        automatoAceito = true;
+                    }
+                }
+
+                if(!automatoAceito) mensagemFinal += " não";
+                mensagemFinal += " é aceita pelo autômato.";
+
+                System.out.println(mensagemFinal);
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
-
-            if(!automatoAceito) mensagemFinal += " não";
-            mensagemFinal += " é aceita pelo autômato.";
-
-            System.out.println(mensagemFinal);
-        } catch (Exception exception) {
-            exception.printStackTrace();
+                
+            System.out.print("Deseja avaliar outra entrada (0 - não | 1 - sim)? ");
+            avaliarOutraEntrada = scanner.nextInt() == 0 ? false : true;
         }
 
-    }
-
-    private static ACP obterDados() {
-        return null;
+        System.out.println("Programa finalizado!");
     }
 }
 

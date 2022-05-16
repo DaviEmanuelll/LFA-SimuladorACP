@@ -22,8 +22,10 @@ public class EstadoAtual {
         List<EstadoAtual> proximosEstados = new ArrayList<EstadoAtual>();
 
         for(FuncaoTransicao funcaoTransicao : estado.funcoesTransicao) {
-            boolean entradaEquivalente = funcaoTransicao.entrada == entrada;
-            boolean topoEquivalente = funcaoTransicao.topoPilha == pilhaMomentanea.peek();
+            boolean entradaEquivalente = 
+                funcaoTransicao.entrada == '-' || funcaoTransicao.entrada == entrada;
+            boolean topoEquivalente =
+                pilhaMomentanea.size() != 0 && funcaoTransicao.topoPilha == pilhaMomentanea.peek();
 
             if(entradaEquivalente && topoEquivalente) {
                 Stack<Character> pilhaAtualizada = new Stack<Character>();
@@ -40,10 +42,12 @@ public class EstadoAtual {
     }
 
     public void exibirPilha() {
-        System.out.print("Pilha do estado(Do início ao topo): ");
+        if(pilhaMomentanea.size() == 0) return;
 
+        Character ultimoElemento = pilhaMomentanea.get(0);
         for(Character elementoPilha : pilhaMomentanea) {
-            System.out.print(elementoPilha + " ");
+            System.out.print(elementoPilha);
+            if(elementoPilha != ultimoElemento) System.out.print(" ");
         }
     }
 }

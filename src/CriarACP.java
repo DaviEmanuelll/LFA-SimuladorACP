@@ -11,26 +11,24 @@ public class CriarACP {
         List<Estado> novosEstados = new ArrayList<Estado>();
 
         System.out.println("--------------------------------");
-        System.out.println("Quantos estados terá o ACP: ");
+        System.out.print("Quantos estados terá o ACP: ");
         int numEstados = scanner.nextInt();
         System.out.println();
         
         for(int i=1 ; i<=numEstados ; i++){
             String nome;
-            boolean aceitacao = false;
 
-            System.out.println("Qual o nome do estado "+((i==1)?"Inicial? ":i+"º?"));
+            System.out.print("Qual o nome do estado "
+                + ((i==1) ? "Inicial" : (i + "º")) + "? "
+            );
             nome = scanner.next();
 
-            System.out.println("Ele é de aceitação?(1 para sim)");
-            int resposta = scanner.nextInt();
-            if(resposta == 1) aceitacao=true;
+            System.out.print("Ele é de aceitação (0 - não | 1 - sim)? ");
+            boolean aceitacao = scanner.nextInt() == 0 ? false : true;
 
             novosEstados.add(new Estado(nome,aceitacao));
             System.out.println();
         }
-
-        
 
         return novosEstados;
     }
@@ -42,8 +40,9 @@ public class CriarACP {
         char simboloInicio;
 
         System.out.println("--------------------------------");
-        System.out.println("Quantos símbolos terá o alfabeto do Automato?");
+        System.out.print("Quantos símbolos terá o alfabeto do Automato? ");
         int numSimbolos = scanner.nextInt();
+
         System.out.println("====");
         for(int i=1;i<=numSimbolos;i++){
             System.out.print(i+": ");
@@ -53,8 +52,9 @@ public class CriarACP {
         System.out.println("====");
 
         System.out.println();
-        System.out.println("Quantos símbolos terá o alfabeto da Pilha?");
+        System.out.print("Quantos símbolos terá o alfabeto da Pilha? ");
         numSimbolos = scanner.nextInt();
+
         System.out.println("====");
         for(int i=1;i<=numSimbolos;i++){
             System.out.print(i+": ");
@@ -64,7 +64,7 @@ public class CriarACP {
         System.out.println("====");
 
         System.out.println();
-        System.out.println("Qual será o símbolos de inicio da Pilha?");
+        System.out.print("Qual será o símbolos de inicio da Pilha? ");
         simboloInicio = scanner.next().charAt(0);
 
         ACP acp = new ACP(
@@ -73,7 +73,6 @@ public class CriarACP {
         );
 
         return acp;
-
     }
 
 
@@ -82,7 +81,7 @@ public class CriarACP {
         for(Estado trasicoes: estados){
 
             System.out.println();
-            System.out.println("Quantas funções de Transição o estado "+trasicoes.nome+" terá?");
+            System.out.print("Quantas funções de Transição o estado "+trasicoes.nome+" terá? ");
             int numFuncoes = scanner.nextInt();
             List<FuncaoTransicao> funcoesTransicao = new ArrayList<FuncaoTransicao>(); 
 
@@ -95,7 +94,7 @@ public class CriarACP {
 
                 boolean entradaValida = false;
                 while(entradaValida == false){
-                    System.out.print("Entrada: ");
+                    System.out.print("Entrada(- para transição vazia): ");
                     entrada = scanner.next().charAt(0);
                     entradaValida = acp.entradaInclusaNoAlfabeto(entrada);
                 }
@@ -111,7 +110,7 @@ public class CriarACP {
                 
                 entradaValida = false;
                 while(entradaValida == false){
-                    System.out.print("Topo da Pilha('-'para tirar e '='para permanecer): ");
+                    System.out.print("Adicionar à pilha(- para tirar e = para permanecer): ");
                     proximoSimbolo = scanner.next().charAt(0);
                     entradaValida = acp.entradaInclusaNoAlfabetoPilha(proximoSimbolo);
                 }
@@ -121,9 +120,7 @@ public class CriarACP {
             }
 
             trasicoes.funcoesTransicao = funcoesTransicao;
-
         }
-
     }   
 
     public static Estado escolherEstados(List<Estado> estados){
@@ -144,8 +141,8 @@ public class CriarACP {
                 }
             }
 
-            if(estadoEncontrado == null){
-                System.out.println("Estado "+nomeBusca+" não encontrado!");
+            if(estadoEncontrado == null) {
+                System.out.println("Estado " + nomeBusca + " não encontrado!");
             }
         }
         return estadoEncontrado;

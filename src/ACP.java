@@ -17,8 +17,11 @@ public class ACP {
         Set<Character> alfabetoPilha, char simboloInicio
     ) {
         this.estadoInicial = estadoInicial;
-        this.alfabetoAutomato = alfabetoAutomato;
         this.simboloInicio = simboloInicio;
+
+        this.alfabetoAutomato = new HashSet<Character>();
+        alfabetoAutomato.add('-');
+        this.alfabetoAutomato.addAll(alfabetoAutomato);
 
         this.alfabetoPilha = new HashSet<Character>();
         this.alfabetoPilha.add('-');
@@ -33,13 +36,14 @@ public class ACP {
         estadosAtuais.add(new EstadoAtual(estadoInicial, pilhaInicial));
     }
 
-    private void transicionarEstados(char entrada) {
+    public void atualizarACP(char entrada) {
         List<EstadoAtual> estadosAtuaisAtualizados = new ArrayList<EstadoAtual>();
 
         for(EstadoAtual estadoAtual : estadosAtuais){
             List<EstadoAtual> proximosEstados = estadoAtual.obterEstadosTransicao(entrada);
 
             System.out.println("Estado anterior: " + estadoAtual.estado.nome);
+            System.out.print("Pilha anterior(Do início ao topo): ");
             estadoAtual.exibirPilha();
             System.out.println("\nEntrada: " + entrada);
 
@@ -53,25 +57,24 @@ public class ACP {
     
                 for(EstadoAtual proximoEstado : proximosEstados) {
                     boolean ramificacaoMorta = proximoEstado == null || proximoEstado.estado == null;
-
-                    System.out.println(
+                    System.out.print(
                         ramificacaoMorta ? "Ramificação Morta" : proximoEstado.estado.nome 
                     );
-    
+
+                    if(!ramificacaoMorta) {
+                        System.out.print(" (Pilha: ");
+                        proximoEstado.exibirPilha();
+                        System.out.print(")");
+                    }
                     if(proximoEstado != ultimoProximoEstado) System.out.print(", ");
                 }
             }
 
-            System.out.println();
+            System.out.println('\n');
         }
 
         estadosAtuaisAtualizados.removeAll(Collections.singleton(null));
         estadosAtuais = estadosAtuaisAtualizados;
-    }
-
-    public void atualizarACP(char entrada) {
-        transicionarEstados(entrada);
-
     }
 
     public void validarEntradaCompleta(String entradaCompleta) throws Exception {
@@ -101,6 +104,18 @@ public class ACP {
         }
 
         System.out.println("Entrada Invalida");
+        return false;
+    }
+
+    public boolean existeTransicaoVazia() {
+        for(EstadoAtual estadoAtual : estadosAtuais) {
+            List<FuncaoTransicao> funcoesTransicao = estadoAtual.estado.funcoesTransicao;
+
+            for(FuncaoTransicao funcaoTransicao : funcoesTransicao) {
+                if(funcaoTransicao.entrada == '-') return true;
+            }
+        }
+
         return false;
     }
 }
