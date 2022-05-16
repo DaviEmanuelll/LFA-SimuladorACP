@@ -5,16 +5,27 @@ public class Main{
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String args[]) {
-        List<Estado> estados = CriarACP.criarEstados();
-        ACP acpPadrao = CriarACP.criarACP(estados);
-        CriarACP.definirFuncoesTransicao(estados, acpPadrao);
+
+        ACP acpPadrao = null;
+        
+        System.out.print("Deseja usar o APC de exemplo ou criar um ACP (0 - exemplo | 1 - criar)? ");
+        boolean criar = scanner.nextInt() == 0 ? false : true;
+        
+        if(criar){
+            List<Estado> estados = CriarACP.criarEstados();
+            acpPadrao = CriarACP.criarACP(estados);
+            CriarACP.definirFuncoesTransicao(estados, acpPadrao);
+        } else {
+            acpPadrao = CriarACP.chamarACP();
+            System.out.println("O ACP usado será: "+acpPadrao.nome);
+        }
 
         boolean avaliarOutraEntrada = true;
         while(avaliarOutraEntrada) {
             System.out.print("Informe a entrada: ");
             String entrada = scanner.next();
 
-            ACP acp = new ACP(
+            ACP acp = new ACP( acpPadrao.nome,
                 acpPadrao.estadoInicial, acpPadrao.alfabetoAutomato, 
                 acpPadrao.alfabetoPilha, acpPadrao.simboloInicio
             );
@@ -39,17 +50,18 @@ public class Main{
                 if(!automatoAceito) mensagemFinal += " não";
                 mensagemFinal += " é aceita pelo autômato.";
 
-                System.out.println(mensagemFinal);
+                System.out.println("\n-> "+mensagemFinal);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
                 
-            System.out.print("Deseja avaliar outra entrada (0 - não | 1 - sim)? ");
+            System.out.print("\nDeseja avaliar outra entrada para o ACP "+acp.nome+"(0 - não | 1 - sim)? ");
             avaliarOutraEntrada = scanner.nextInt() == 0 ? false : true;
         }
 
         System.out.println("Programa finalizado!");
     }
+
 }
 
 /*

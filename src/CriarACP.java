@@ -7,6 +7,35 @@ import java.util.Set;
 public class CriarACP {    
     public static Scanner scanner = new Scanner(System.in);
 
+    public static ACP chamarACP(){
+        List<Estado> estado = new ArrayList<Estado>();
+        Estado estado0 = new Estado("q0", false);
+        Estado estado1 = new Estado("q1", false);
+        Estado estado2 = new Estado("q2", true);
+        
+        Set<Character> alfabetoAutomato =  new HashSet<Character>();
+        alfabetoAutomato.add('a');
+        alfabetoAutomato.add('b');
+        Set<Character> alfabetoPilha = new HashSet<Character>();
+        alfabetoPilha.add('a');
+        ACP acp = new ACP("a(n)b(n+1)", estado0, alfabetoAutomato, alfabetoPilha, 'Z');
+
+        List<FuncaoTransicao> funcoesTransicao0 = new ArrayList<FuncaoTransicao>(); 
+        funcoesTransicao0.add(new FuncaoTransicao('a', 'Z', estado0, 'a'));
+        funcoesTransicao0.add(new FuncaoTransicao('a', 'a', estado0, 'a'));
+        funcoesTransicao0.add(new FuncaoTransicao('b', 'a', estado1, '='));
+        estado0.funcoesTransicao = funcoesTransicao0;
+        List<FuncaoTransicao> funcoesTransicao1 = new ArrayList<FuncaoTransicao>(); 
+        funcoesTransicao1.add(new FuncaoTransicao('b', 'a', estado1, '-'));
+        funcoesTransicao1.add(new FuncaoTransicao('-', 'Z', estado2, '-'));
+        estado1.funcoesTransicao = funcoesTransicao1;
+
+        estado.add(estado0);
+        estado.add(estado1);
+        estado.add(estado2);
+
+        return acp;
+    }
     public static List<Estado> criarEstados(){      
         List<Estado> novosEstados = new ArrayList<Estado>();
 
@@ -17,7 +46,7 @@ public class CriarACP {
         
         for(int i=1 ; i<=numEstados ; i++){
             String nome;
-
+            
             System.out.print("Qual o nome do estado "
                 + ((i==1) ? "Inicial" : (i + "º")) + "? "
             );
@@ -40,6 +69,9 @@ public class CriarACP {
         char simboloInicio;
 
         System.out.println("--------------------------------");
+        System.out.print("Qual nome do ACP? ");
+        String nome = scanner.next();
+
         System.out.print("Quantos símbolos terá o alfabeto do Automato? ");
         int numSimbolos = scanner.nextInt();
 
@@ -67,7 +99,7 @@ public class CriarACP {
         System.out.print("Qual será o símbolos de inicio da Pilha? ");
         simboloInicio = scanner.next().charAt(0);
 
-        ACP acp = new ACP(
+        ACP acp = new ACP( nome,
             estadoInicial, alfabetoAutomato, 
             alfabetoPilha, simboloInicio
         );
@@ -90,7 +122,7 @@ public class CriarACP {
                 char topoPilha = ' ';
                 Estado proximoEstado;
                 char proximoSimbolo = ' ';
-                System.out.println();
+                System.out.println("-"+i+"º Função de Transição");
 
                 boolean entradaValida = false;
                 while(entradaValida == false){

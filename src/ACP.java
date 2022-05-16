@@ -6,16 +6,19 @@ import java.util.Set;
 import java.util.Stack;
 
 public class ACP {
+    public String nome;
     public Estado estadoInicial;
     public Set<Character> alfabetoAutomato;
     public Set<Character> alfabetoPilha;
     public List<EstadoAtual> estadosAtuais;
     public char simboloInicio;
 
-    public ACP (
+    public ACP ( String nome,
         Estado estadoInicial, Set<Character> alfabetoAutomato, 
         Set<Character> alfabetoPilha, char simboloInicio
     ) {
+        this.nome = nome;
+        
         this.estadoInicial = estadoInicial;
         this.simboloInicio = simboloInicio;
 
@@ -42,6 +45,7 @@ public class ACP {
         for(EstadoAtual estadoAtual : estadosAtuais){
             List<EstadoAtual> proximosEstados = estadoAtual.obterEstadosTransicao(entrada);
 
+            System.out.println('\n');
             System.out.println("Estado anterior: " + estadoAtual.estado.nome);
             System.out.print("Pilha anterior(Do início ao topo): ");
             estadoAtual.exibirPilha();
@@ -68,10 +72,9 @@ public class ACP {
                     }
                     if(proximoEstado != ultimoProximoEstado) System.out.print(", ");
                 }
-            }
-
-            System.out.println('\n');
+            }            
         }
+        System.out.print("\n\n========================================");
 
         estadosAtuaisAtualizados.removeAll(Collections.singleton(null));
         estadosAtuais = estadosAtuaisAtualizados;
@@ -110,6 +113,7 @@ public class ACP {
     public boolean existeTransicaoVazia() {
         for(EstadoAtual estadoAtual : estadosAtuais) {
             List<FuncaoTransicao> funcoesTransicao = estadoAtual.estado.funcoesTransicao;
+            if(estadoAtual.estado.funcoesTransicao == null) continue;
 
             for(FuncaoTransicao funcaoTransicao : funcoesTransicao) {
                 if(funcaoTransicao.entrada == '-') return true;
