@@ -9,4 +9,10 @@ public class Estado {
         this.nome = nome;
         this.aceitacao = aceitacao;
     }
+
+    @Override
+    public String toString() {
+        return "[" + nome +"]";
+    }
+
 }

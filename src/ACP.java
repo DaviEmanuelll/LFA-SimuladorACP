@@ -23,6 +23,7 @@ public class ACP {
         this.alfabetoPilha = new HashSet<Character>();
         this.alfabetoPilha.add('-');
         this.alfabetoPilha.add('=');
+        this.alfabetoPilha.add(simboloInicio);
         this.alfabetoPilha.addAll(alfabetoPilha);
 
         estadosAtuais = new ArrayList<EstadoAtual>();
@@ -83,11 +84,12 @@ public class ACP {
         }
     }
 
-    private boolean entradaInclusaNoAlfabeto(char entrada){
+     boolean entradaInclusaNoAlfabeto(char entrada){
         for(char letraAlfabeto : alfabetoAutomato){
             if(letraAlfabeto == entrada) return true;
         }
 
+        System.out.println("Entrada Invalida");
         return false;
     }
 
@@ -98,6 +100,7 @@ public class ACP {
             if(letraAlfabeto == simboloPilha) return true;
         }
 
+        System.out.println("Entrada Invalida");
         return false;
     }
 }
