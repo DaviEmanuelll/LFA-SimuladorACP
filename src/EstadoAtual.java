@@ -18,30 +18,48 @@ public class EstadoAtual {
         else if(entrada != '=') pilha.push(entrada);
     }
 
-    public List<EstadoAtual> obterEstadosTransicao(char entrada) {
+    private List<EstadoAtual> obterEstadosTransicao(
+        Estado estado, char entrada, Stack<Character> pilhaInicial
+    ) {
         List<EstadoAtual> proximosEstados = new ArrayList<EstadoAtual>();
+        
+        for(FuncaoTransicao funcaoTransicao : estado.funcoesTransicao) {
+            boolean consumiuEntrada = funcaoTransicao.entrada == entrada;
 
-        if(entrada == '-' && estado.funcoesTransicao.size() == 0) proximosEstados.add(this);
-        else {
-            for(FuncaoTransicao funcaoTransicao : estado.funcoesTransicao) {
-                boolean entradaEquivalente = 
-                    funcaoTransicao.entrada == '-' || funcaoTransicao.entrada == entrada;
-                boolean topoEquivalente =
-                    pilhaMomentanea.size() != 0 && funcaoTransicao.topoPilha == pilhaMomentanea.peek();
-    
-                if(entradaEquivalente && topoEquivalente) {
-                    Stack<Character> pilhaAtualizada = new Stack<Character>();
-                    pilhaAtualizada.addAll(pilhaMomentanea);
-                    tratarAdicaoPilha(pilhaAtualizada, funcaoTransicao.proximoSimbolo);
-    
+            boolean entradaEquivalente = funcaoTransicao.entrada == '-' || consumiuEntrada;
+            boolean topoEquivalente =
+                pilhaMomentanea.size() != 0 && funcaoTransicao.topoPilha == pilhaMomentanea.peek();
+
+            if(entradaEquivalente && topoEquivalente) {
+                Stack<Character> pilhaAtualizada = new Stack<Character>();
+                if(pilhaInicial != null) pilhaAtualizada.addAll(pilhaInicial);
+                else pilhaAtualizada.addAll(pilhaMomentanea);
+                tratarAdicaoPilha(pilhaAtualizada, funcaoTransicao.proximoSimbolo);
+
+                Estado proximoEstado = funcaoTransicao.proximoEstado;
+                if(consumiuEntrada) {
                     proximosEstados.add(
-                        new EstadoAtual(funcaoTransicao.proximoEstado, pilhaAtualizada)
+                        new EstadoAtual(proximoEstado, pilhaAtualizada)
+                    );
+                } else {
+                    proximosEstados.addAll(
+                        obterEstadosTransicao(proximoEstado, entrada, pilhaAtualizada)
                     );
                 }
             }
         }
 
         return proximosEstados;
+    }
+
+    public List<EstadoAtual> obterEstadosTransicao(char entrada) {
+        if(entrada == '-' && estado.funcoesTransicao.size() == 0) {
+            List<EstadoAtual> proximosEstados = new ArrayList<EstadoAtual>();
+            proximosEstados.add(this);
+            return proximosEstados;
+        }
+       
+        return obterEstadosTransicao(estado, entrada, null);
     }
 
     public void exibirPilha() {

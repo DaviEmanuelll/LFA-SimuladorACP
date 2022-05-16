@@ -53,7 +53,7 @@ public class CriarACP {
             nome = scanner.next();
 
             System.out.print("Ele é de aceitação (0 - não | 1 - sim)? ");
-            boolean aceitacao = scanner.nextInt() == 0 ? false : true;
+            boolean aceitacao = scanner.next() != "0";
 
             novosEstados.add(new Estado(nome,aceitacao));
             System.out.println();
