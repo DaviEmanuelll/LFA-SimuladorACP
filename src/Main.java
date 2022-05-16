@@ -8,7 +8,7 @@ public class Main{
         ACP acpPadrao = null;
         
         System.out.print("Deseja usar o APC de exemplo ou criar um ACP (0 - exemplo | 1 - criar)? ");
-        boolean criar = scanner.next() != "0";
+        boolean criar = scanner.next().charAt(0) != '0';
         
         if(criar){
             List<Estado> estados = CriarACP.criarEstados();
@@ -58,7 +58,7 @@ public class Main{
                 "\nDeseja avaliar outra entrada para o ACP " +
                 acp.nome + "(0 - não | 1 - sim)? "
             );
-            avaliarOutraEntrada = scanner.next() != "0";
+            avaliarOutraEntrada = scanner.next().charAt(0) != '0';
         }
 
         System.out.println("Programa finalizado!");
